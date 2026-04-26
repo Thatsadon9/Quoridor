@@ -3,23 +3,46 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wall Trap Game (Offline)</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta name="description" content="เกมกระดาน Wall Trap (Quoridor) เล่นออนไลน์แบบ Real-time หรือเล่นออฟไลน์สลับตาในเครื่องเดียว" />
+    <meta name="theme-color" content="#1a1f2d" />
+    <meta property="og:title" content="Wall Trap Game — Online Multiplayer Board Game" />
+    <meta property="og:description" content="เกมกระดานสุดคลาสสิก เดินหมากไปถึงฝั่งตรงข้ามก่อนคู่แข่ง พร้อมวางกำแพงขวางทาง!" />
+    <meta property="og:type" content="website" />
+    <title>Wall Trap Game — Online Multiplayer Board Game</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
     <div class="app">
       <header class="header">
-        <h1>Wall Trap Game</h1>
-        <p>เล่นออฟไลน์ 2 คน สลับตาเหมือนบอร์ดเกมจริง</p>
+        <div class="header-content">
+          <h1>
+            <span class="logo-icon">♟</span>
+            Wall Trap Game
+          </h1>
+          <p>เล่นออนไลน์กับเพื่อนแบบ Real-time หรือเล่นออฟไลน์สลับตาในเครื่องเดียว</p>
+        </div>
+        <div id="soundToggle" class="sound-toggle" title="เปิด/ปิดเสียง">
+          <svg id="soundIcon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14" opacity="0.5"/>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+          </svg>
+        </div>
       </header>
 
       <main class="layout">
         <section class="board-shell" aria-label="กระดานเกม">
-          <div id="board" class="board"></div>
+          <div class="board-wrapper">
+            <div id="board" class="board"></div>
+          </div>
         </section>
 
         <aside class="panel">
-          <div class="card">
+          <div class="card status-card">
             <h2>สถานะเกม</h2>
             <p id="turnText" class="turn-text"></p>
             <p id="statusText" class="status-text"></p>
@@ -27,12 +50,12 @@
 
           <div class="card players">
             <h2>ผู้เล่น</h2>
-            <div class="player-row">
+            <div class="player-row" id="playerRowRed">
               <span class="swatch red"></span>
               <span>ฝ่ายแดง</span>
               <strong id="redWalls">10 กำแพง</strong>
             </div>
-            <div class="player-row">
+            <div class="player-row" id="playerRowIvory">
               <span class="swatch ivory"></span>
               <span>ฝ่ายงาช้าง</span>
               <strong id="ivoryWalls">10 กำแพง</strong>
@@ -40,21 +63,74 @@
           </div>
 
           <div class="card controls">
-            <h2>ควบคุม</h2>
-            <button id="orientationBtn" type="button">แนวกำแพง: แนวนอน</button>
-            <button id="newGameBtn" type="button">เริ่มเกมใหม่</button>
+            <h2>ออนไลน์มัลติเพลเยอร์</h2>
+            <button id="createRoomBtn" type="button">
+              <span class="btn-icon">🌐</span>
+              สร้างห้องใหม่
+            </button>
+            <div id="inviteSection" class="invite-section" style="display: none;">
+              <p class="invite-label">ส่งลิงก์นี้ให้เพื่อน:</p>
+              <div class="invite-row">
+                <input type="text" id="inviteLink" readonly />
+                <button id="copyLinkBtn" type="button" class="copy-btn" title="คัดลอกลิงก์">📋</button>
+              </div>
+              <p id="copyFeedback" class="copy-feedback" style="display: none;">✓ คัดลอกลิงก์แล้ว!</p>
+            </div>
+            <div id="waitingIndicator" class="waiting-indicator" style="display: none;">
+              <div class="waiting-dots">
+                <span></span><span></span><span></span>
+              </div>
+              <span>รอฝ่ายตรงข้ามเข้าร่วม...</span>
+            </div>
+
+            <hr class="divider">
+
+            <h2>ควบคุมการเล่น</h2>
+            <button id="orientationBtn" type="button">
+              <span class="btn-icon">🧱</span>
+              แนวกำแพง: แนวนอน
+            </button>
+            <p class="shortcut-hint">กด <kbd>R</kbd> เพื่อสลับแนวกำแพง</p>
+            <button id="newGameBtn" type="button">
+              <span class="btn-icon">🔄</span>
+              เริ่มเกมใหม่
+            </button>
           </div>
 
           <div class="card rules">
-            <h2>วิธีเล่นย่อ</h2>
-            <p>เป้าหมายคือเดินหมากไปถึงฝั่งตรงข้ามก่อนคู่แข่ง</p>
-            <p>หนึ่งตาเลือกได้อย่างใดอย่างหนึ่ง: เดิน 1 ช่อง หรือวางกำแพง 1 ชิ้น</p>
-            <p>ห้ามวางกำแพงปิดทางจนไม่มีทางชนะเหลืออยู่สำหรับฝ่ายใดฝ่ายหนึ่ง</p>
+            <h2>วิธีเล่น</h2>
+            <div class="rule-item">
+              <span class="rule-num">1</span>
+              <p>เป้าหมายคือเดินหมากไปถึงฝั่งตรงข้ามก่อนคู่แข่ง</p>
+            </div>
+            <div class="rule-item">
+              <span class="rule-num">2</span>
+              <p>หนึ่งตาเลือกได้: เดิน 1 ช่อง หรือวางกำแพง 1 ชิ้น</p>
+            </div>
+            <div class="rule-item">
+              <span class="rule-num">3</span>
+              <p>ห้ามวางกำแพงปิดทางจนไม่มีทางชนะเหลือ</p>
+            </div>
           </div>
         </aside>
       </main>
+
+      <!-- Win Overlay -->
+      <div id="winOverlay" class="win-overlay" style="display: none;">
+        <div class="win-content">
+          <div class="win-trophy">🏆</div>
+          <h2 id="winTitle" class="win-title"></h2>
+          <p class="win-subtitle">เกมจบแล้ว!</p>
+          <button id="winNewGameBtn" type="button" class="win-btn">เริ่มเกมใหม่</button>
+        </div>
+        <div class="confetti-container" id="confetti"></div>
+      </div>
+
+      <footer class="footer">
+        <p>Wall Trap Game — Quoridor-style Board Game • Built with ♥</p>
+      </footer>
     </div>
 
-    <script src="script.js"></script>
+    <script type="module" src="/script.js"></script>
   </body>
 </html>

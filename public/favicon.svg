@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#5b261f"/>
+      <stop offset="100%" style="stop-color:#7b3328"/>
+    </linearGradient>
+    <linearGradient id="wall" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f0bd73"/>
+      <stop offset="100%" style="stop-color:#af7434"/>
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="16" fill="url(#bg)"/>
+  <!-- Grid cells -->
+  <rect x="10" y="10" width="22" height="22" rx="3" fill="#151515" opacity="0.8"/>
+  <rect x="39" y="10" width="22" height="22" rx="3" fill="#151515" opacity="0.8"/>
+  <rect x="68" y="10" width="22" height="22" rx="3" fill="#151515" opacity="0.8"/>
+  <rect x="10" y="39" width="22" height="22" rx="3" fill="#151515" opacity="0.8"/>
+  <rect x="39" y="39" width="22" height="22" rx="3" fill="#151515" opacity="0.8"/>
+  <rect x="68" y="39" width="22" height="22" rx="3" fill="#151515" opacity="0.8"/>
+  <rect x="10" y="68" width="22" height="22" rx="3" fill="#151515" opacity="0.8"/>
+  <rect x="39" y="68" width="22" height="22" rx="3" fill="#151515" opacity="0.8"/>
+  <rect x="68" y="68" width="22" height="22" rx="3" fill="#151515" opacity="0.8"/>
+  <!-- Wall -->
+  <rect x="33" y="36" width="5" height="29" rx="2" fill="url(#wall)"/>
+  <!-- Red pawn -->
+  <circle cx="50" cy="79" r="8" fill="#ca2b2b"/>
+  <ellipse cx="47" cy="76" rx="3" ry="2" fill="rgba(255,255,255,0.3)"/>
+  <!-- Ivory pawn -->
+  <circle cx="50" cy="21" r="8" fill="#e8c98e"/>
+  <ellipse cx="47" cy="18" rx="3" ry="2" fill="rgba(255,255,255,0.3)"/>
+</svg>
