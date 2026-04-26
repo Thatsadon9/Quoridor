@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wall Trap Game (Offline)</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="header">
+        <h1>Wall Trap Game</h1>
+        <p>เล่นออฟไลน์ 2 คน สลับตาเหมือนบอร์ดเกมจริง</p>
+      </header>
+
+      <main class="layout">
+        <section class="board-shell" aria-label="กระดานเกม">
+          <div id="board" class="board"></div>
+        </section>
+
+        <aside class="panel">
+          <div class="card">
+            <h2>สถานะเกม</h2>
+            <p id="turnText" class="turn-text"></p>
+            <p id="statusText" class="status-text"></p>
+          </div>
+
+          <div class="card players">
+            <h2>ผู้เล่น</h2>
+            <div class="player-row">
+              <span class="swatch red"></span>
+              <span>ฝ่ายแดง</span>
+              <strong id="redWalls">10 กำแพง</strong>
+            </div>
+            <div class="player-row">
+              <span class="swatch ivory"></span>
+              <span>ฝ่ายงาช้าง</span>
+              <strong id="ivoryWalls">10 กำแพง</strong>
+            </div>
+          </div>
+
+          <div class="card controls">
+            <h2>ควบคุม</h2>
+            <button id="orientationBtn" type="button">แนวกำแพง: แนวนอน</button>
+            <button id="newGameBtn" type="button">เริ่มเกมใหม่</button>
+          </div>
+
+          <div class="card rules">
+            <h2>วิธีเล่นย่อ</h2>
+            <p>เป้าหมายคือเดินหมากไปถึงฝั่งตรงข้ามก่อนคู่แข่ง</p>
+            <p>หนึ่งตาเลือกได้อย่างใดอย่างหนึ่ง: เดิน 1 ช่อง หรือวางกำแพง 1 ชิ้น</p>
+            <p>ห้ามวางกำแพงปิดทางจนไม่มีทางชนะเหลืออยู่สำหรับฝ่ายใดฝ่ายหนึ่ง</p>
+          </div>
+        </aside>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
