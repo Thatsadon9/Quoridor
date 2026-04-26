@@ -130,8 +130,9 @@ body {
 /* --- Board Shell --- */
 .board-shell {
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--border-subtle);
@@ -144,6 +145,44 @@ body {
   overflow-y: visible;
   max-width: 100%;
   -webkit-overflow-scrolling: touch;
+}
+
+.quick-controls {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.quick-btn {
+  background: linear-gradient(135deg, #f0bd73, #d89951);
+  color: #111522;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: "Inter", sans-serif;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(240, 189, 115, 0.3);
+  transition: transform var(--transition-fast), filter var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quick-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+.quick-btn:active {
+  transform: translateY(0);
+}
+
+.desktop-only {
+  display: block;
 }
 
 .board {
@@ -779,6 +818,10 @@ kbd {
 
   .win-title {
     font-size: 1.5rem;
+  }
+  
+  .desktop-only {
+    display: none;
   }
 }
 

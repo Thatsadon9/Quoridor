@@ -437,7 +437,7 @@ function updatePanel() {
   statusTextEl.textContent = state.message;
   redWallsEl.textContent = `${state.players[0].wallsLeft} กำแพง`;
   ivoryWallsEl.textContent = `${state.players[1].wallsLeft} กำแพง`;
-  orientationBtn.innerHTML = `<span class="btn-icon">🧱</span> แนวกำแพง: ${state.orientation === "horizontal" ? "แนวนอน" : "แนวตั้ง"}`;
+  orientationBtn.innerHTML = `<span class="btn-icon">🧱</span> สลับแนว (${state.orientation === "horizontal" ? "แนวนอน" : "แนวตั้ง"})`;
 
   // Highlight active player row
   if (playerRowRed) playerRowRed.classList.toggle("active", state.currentPlayer === 0);
