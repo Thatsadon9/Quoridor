@@ -5,6 +5,20 @@ import { createClient } from '@supabase/supabase-js';
 // ==========================================
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error("Supabase credentials missing! Check your .env file or Environment Variables.");
+  document.body.innerHTML = `
+    <div style="padding: 20px; background: #5b261f; color: #fff; font-family: sans-serif; text-align: center; border-radius: 12px; margin: 20px;">
+      <h2>⚠️ Missing Configuration</h2>
+      <p>Supabase URL หรือ API Key หายไปครับ</p>
+      <p style="font-size: 0.9rem; opacity: 0.8;">ถ้าคุณรันบนเครื่องตัวเอง: ให้สร้างไฟล์ <b>.env</b> และใส่ VITE_SUPABASE_URL และ VITE_SUPABASE_ANON_KEY</p>
+      <p style="font-size: 0.9rem; opacity: 0.8;">ถ้าคุณ Deploy บน Vercel: ให้ไปตั้งค่าที่ <b>Settings -> Environment Variables</b></p>
+    </div>
+  `;
+  throw new Error("Supabase credentials missing");
+}
+
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const urlParams = new URLSearchParams(window.location.search);
