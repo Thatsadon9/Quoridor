@@ -41,21 +41,6 @@ if (gameId) {
 const BOARD_SIZE = 9;
 const DIRECTIONS = [[-1, 0], [1, 0], [0, -1], [0, 1]];
 
-// Read CSS variable values for positioning
-function getCSSSize(name) {
-  return parseInt(getComputedStyle(document.documentElement).getPropertyValue(name), 10);
-}
-
-function getSizes() {
-  const cellSize = getCSSSize('--cell-size');
-  const gapSize = getCSSSize('--gap-size');
-  const stepSize = cellSize + gapSize;
-  const wallThickness = getCSSSize('--wall-thickness');
-  const wallLength = (2 * cellSize) + gapSize;
-  const pawnSize = getCSSSize('--pawn-size');
-  return { cellSize, gapSize, stepSize, wallThickness, wallLength, pawnSize };
-}
-
 // ==========================================
 // 3. Sound System
 // ==========================================
@@ -202,7 +187,6 @@ function createInitialState() {
 }
 
 function buildBoard() {
-  const s = getSizes();
   const fragment = document.createDocumentFragment();
 
   for (let r = 0; r < BOARD_SIZE; r++) {
@@ -212,8 +196,8 @@ function buildBoard() {
       cell.className = "cell";
       cell.dataset.row = String(r);
       cell.dataset.col = String(c);
-      cell.style.top = `${r * s.stepSize}px`;
-      cell.style.left = `${c * s.stepSize}px`;
+      cell.style.setProperty('--row', r);
+      cell.style.setProperty('--col', c);
       cell.setAttribute("aria-label", `ช่อง ${r + 1}, ${c + 1}`);
       cells.set(cellKey(r, c), cell);
       fragment.append(cell);
@@ -222,8 +206,8 @@ function buildBoard() {
 
   for (let r = 0; r < BOARD_SIZE - 1; r++) {
     for (let c = 0; c < BOARD_SIZE - 1; c++) {
-      const hSlot = createWallSlot("horizontal", r, c, s);
-      const vSlot = createWallSlot("vertical", r, c, s);
+      const hSlot = createWallSlot("horizontal", r, c);
+      const vSlot = createWallSlot("vertical", r, c);
       wallSlots.push(hSlot, vSlot);
       fragment.append(hSlot, vSlot);
     }
@@ -232,37 +216,27 @@ function buildBoard() {
   boardEl.append(fragment);
 }
 
-function createWallSlot(orientation, r, c, s) {
+function createWallSlot(orientation, r, c) {
   const slot = document.createElement("button");
   slot.type = "button";
-  slot.className = "wall-slot";
+  slot.className = `wall-slot ${orientation}`;
   slot.dataset.orientation = orientation;
   slot.dataset.row = String(r);
   slot.dataset.col = String(c);
 
-  const pos = wallPosition(orientation, r, c, s);
-  slot.style.top = `${pos.top}px`;
-  slot.style.left = `${pos.left}px`;
-
-  if (orientation === "horizontal") {
-    slot.style.width = `${s.wallLength}px`;
-    slot.style.height = `${s.wallThickness}px`;
-  } else {
-    slot.style.width = `${s.wallThickness}px`;
-    slot.style.height = `${s.wallLength}px`;
-  }
+  slot.style.setProperty('--row', r);
+  slot.style.setProperty('--col', c);
 
   return slot;
 }
 
 function createPawns() {
-  const s = getSizes();
   for (let i = 0; i < 2; i++) {
     const pawn = document.createElement("div");
     pawn.className = `pawn ${i === 0 ? "red" : "ivory"}`;
     const p = state.players[i].pawn;
-    pawn.style.top = `${(p.r * s.stepSize) + ((s.cellSize - s.pawnSize) / 2)}px`;
-    pawn.style.left = `${(p.c * s.stepSize) + ((s.cellSize - s.pawnSize) / 2)}px`;
+    pawn.style.setProperty('--row', p.r);
+    pawn.style.setProperty('--col', p.c);
     boardEl.append(pawn);
     pawnEls[i] = pawn;
   }
@@ -416,22 +390,20 @@ function endTurn() {
 // 10. Rendering
 // ==========================================
 function render() {
-  const s = getSizes();
-
   // Clear dynamic elements (walls, hints) but NOT pawns
   boardEl.querySelectorAll(".wall-piece, .move-hint").forEach(el => el.remove());
   cells.forEach(cell => cell.classList.remove("reachable"));
 
   // Walls
-  for (const w of state.walls.horizontal) placeWallPiece("horizontal", w.r, w.c, s);
-  for (const w of state.walls.vertical) placeWallPiece("vertical", w.r, w.c, s);
+  for (const w of state.walls.horizontal) placeWallPiece("horizontal", w.r, w.c);
+  for (const w of state.walls.vertical) placeWallPiece("vertical", w.r, w.c);
 
   // Move pawns smoothly via CSS transition
   for (let i = 0; i < state.players.length; i++) {
     const p = state.players[i].pawn;
     if (pawnEls[i]) {
-      pawnEls[i].style.top = `${(p.r * s.stepSize) + ((s.cellSize - s.pawnSize) / 2)}px`;
-      pawnEls[i].style.left = `${(p.c * s.stepSize) + ((s.cellSize - s.pawnSize) / 2)}px`;
+      pawnEls[i].style.setProperty('--row', p.r);
+      pawnEls[i].style.setProperty('--col', p.c);
     }
   }
 
@@ -441,8 +413,8 @@ function render() {
     for (const move of legalMoves) {
       const hint = document.createElement("div");
       hint.className = "move-hint";
-      hint.style.top = `${(move.r * s.stepSize) + ((s.cellSize - 16) / 2)}px`;
-      hint.style.left = `${(move.c * s.stepSize) + ((s.cellSize - 16) / 2)}px`;
+      hint.style.setProperty('--row', move.r);
+      hint.style.setProperty('--col', move.c);
       boardEl.append(hint);
 
       const cell = cells.get(cellKey(move.r, move.c));
@@ -490,19 +462,11 @@ function updateWallSlots() {
   }
 }
 
-function placeWallPiece(orientation, r, c, s) {
+function placeWallPiece(orientation, r, c) {
   const piece = document.createElement("div");
   piece.className = `wall-piece ${orientation}`;
-  const pos = wallPosition(orientation, r, c, s);
-  piece.style.top = `${pos.top}px`;
-  piece.style.left = `${pos.left}px`;
-  if (orientation === "horizontal") {
-    piece.style.width = `${s.wallLength}px`;
-    piece.style.height = `${s.wallThickness}px`;
-  } else {
-    piece.style.width = `${s.wallThickness}px`;
-    piece.style.height = `${s.wallLength}px`;
-  }
+  piece.style.setProperty('--row', r);
+  piece.style.setProperty('--col', c);
   boardEl.append(piece);
 }
 
@@ -635,13 +599,6 @@ function wallEdges(orientation, r, c) {
     return [[{ r, c }, { r: r + 1, c }], [{ r, c: c + 1 }, { r: r + 1, c: c + 1 }]];
   }
   return [[{ r, c }, { r, c: c + 1 }], [{ r: r + 1, c }, { r: r + 1, c: c + 1 }]];
-}
-
-function wallPosition(orientation, r, c, s) {
-  if (orientation === "horizontal") {
-    return { top: (r * s.stepSize) + s.cellSize + (s.gapSize / 2) - (s.wallThickness / 2), left: c * s.stepSize };
-  }
-  return { top: r * s.stepSize, left: (c * s.stepSize) + s.cellSize + (s.gapSize / 2) - (s.wallThickness / 2) };
 }
 
 // ==========================================
