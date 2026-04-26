@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wall Trap Game (Offline)</title>
+    <title>Wall Trap Game (Offline/Online)</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="app">
       <header class="header">
         <h1>Wall Trap Game</h1>
-        <p>เล่นออฟไลน์ 2 คน สลับตาเหมือนบอร์ดเกมจริง</p>
+        <p>เล่นออฟไลน์หรือออนไลน์แบบห้องส่วนตัว สลับตาเหมือนบอร์ดเกมจริง</p>
       </header>
 
       <main class="layout">
@@ -45,16 +45,37 @@
             <button id="newGameBtn" type="button">เริ่มเกมใหม่</button>
           </div>
 
+          <div class="card online">
+            <h2>ออนไลน์ (Realtime Room)</h2>
+            <p class="hint">ใช้ Supabase Realtime เป็นตัวกลาง sync ระหว่างผู้เล่น 2 คน</p>
+            <label class="field-label" for="supabaseUrlInput">Supabase URL</label>
+            <input id="supabaseUrlInput" type="text" placeholder="https://xxxx.supabase.co" />
+            <label class="field-label" for="supabaseAnonInput">Supabase Anon Key</label>
+            <input id="supabaseAnonInput" type="text" placeholder="ใส่ anon key" />
+            <button id="saveConfigBtn" type="button">บันทึกค่าเชื่อมต่อ</button>
+            <button id="createRoomBtn" type="button">สร้างห้องใหม่</button>
+            <div class="join-row">
+              <input id="roomCodeInput" type="text" maxlength="6" placeholder="เลขห้อง 6 หลัก" />
+              <button id="joinRoomBtn" type="button">Join ห้อง</button>
+            </div>
+            <button id="leaveRoomBtn" type="button">ออกจากห้อง</button>
+            <p id="onlineStatusText" class="status-line"></p>
+            <p id="roomInfoText" class="status-line"></p>
+            <p id="roleInfoText" class="status-line"></p>
+          </div>
+
           <div class="card rules">
             <h2>วิธีเล่นย่อ</h2>
             <p>เป้าหมายคือเดินหมากไปถึงฝั่งตรงข้ามก่อนคู่แข่ง</p>
             <p>หนึ่งตาเลือกได้อย่างใดอย่างหนึ่ง: เดิน 1 ช่อง หรือวางกำแพง 1 ชิ้น</p>
             <p>ห้ามวางกำแพงปิดทางจนไม่มีทางชนะเหลืออยู่สำหรับฝ่ายใดฝ่ายหนึ่ง</p>
+            <p>ออนไลน์: ผู้สร้างห้องเป็นฝ่ายแดง, ผู้ Join เป็นฝ่ายงาช้าง</p>
           </div>
         </aside>
       </main>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
   </body>
 </html>
